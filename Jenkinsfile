@@ -5,13 +5,13 @@ pipeline {
         stage('Build') {
             steps {
                 bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\python.exe" -m venv venv'
-                bat 'venv\\Scripts\\pip.exe install -r requirements.txt'
+                bat 'venv\\Scripts\\pip.exe install -r requirements.txt pytest'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'venv\\Scripts\\pytest tests'
+                bat 'venv\\Scripts\\python.exe -m pytest tests'
             }
         }
 
@@ -25,12 +25,12 @@ pipeline {
     post {
         success {
             mail to: 'sanidhyasaga@gmail.com',
-                 subject: " Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "Build succeeded. Check Jenkins for details."
         }
         failure {
             mail to: 'sanidhyasaga@gmail.com',
-                 subject: " Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "Build failed. Check Jenkins logs for errors."
         }
     }
