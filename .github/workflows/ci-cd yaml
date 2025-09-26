@@ -11,6 +11,7 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,16 +34,32 @@ jobs:
     if: github.ref == 'refs/heads/staging'
     needs: build-test
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Deploy to Staging
-        run: echo "Deploying to staging..."
-        # Add actual deployment logic here
+        env:
+          STAGING_API_KEY: ${{ secrets.STAGING_API_KEY }}
+        run: |
+          echo "Deploying to staging with key: $STAGING_API_KEY"
+          # Example: scp or curl to staging server
+          # scp -i key.pem app.py user@staging-server:/var/www/app/
 
   deploy-production:
     if: github.event_name == 'release'
     needs: build-test
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Deploy to Production
-        run: echo "Deploying to production..."
-        # Add actual deployment logic here
+        env:
+          PROD_API_KEY: ${{ secrets.PROD_API_KEY }}
+        run: |
+          echo "Deploying to production with key: $PROD_API_KEY"
+          # Example: scp or curl to production server
+          # scp -i key.pem app.py user@prod-server:/var/www/app/
